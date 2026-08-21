@@ -1888,11 +1888,11 @@ try{
 <style id="fnt-permanent-music-and-label-fix">
   #fnMusicOrb,#fntCompactMusicOrb,#fntDefaultMusicOrb,#fntNativeMusicDock,#fntCoreMusicOrb{display:none!important}
   #fntPermanentMusicOrb{
-    position:fixed!important;right:126px!important;bottom:20px!important;left:auto!important;top:auto!important;
-    width:62px!important;height:62px!important;min-width:62px!important;border-radius:50%!important;
+    position:fixed!important;right:96px!important;bottom:24px!important;left:auto!important;top:auto!important;
+    width:48px!important;height:48px!important;min-width:48px!important;border-radius:50%!important;
     display:grid!important;place-items:center!important;z-index:2147483645!important;
     border:4px solid #ff5b7d!important;outline:3px solid #111!important;
-    background:#111!important;color:#fff!important;font:800 9px/1 Arial,sans-serif!important;
+    background:#111!important;color:#fff!important;font:800 8px/1 Arial,sans-serif!important;
     letter-spacing:.08em!important;text-align:center!important;box-shadow:0 0 0 2px #ff9cb2,0 0 24px rgba(255,75,115,.8)!important;
     padding:0!important;margin:0!important;transform:none!important;opacity:1!important;visibility:visible!important;
   }
@@ -1908,7 +1908,7 @@ try{
   #fntPermanentMusicPanel button.active{background:#ff5b7d;color:#111}
   .fnt-real-label-card:after{display:none!important;content:none!important}
   @keyframes fntPermanentPulse{50%{box-shadow:0 0 0 3px #ff9cb2,0 0 32px rgba(255,75,115,1)}}
-  @media(max-width:430px){#fntPermanentMusicOrb{right:112px!important;bottom:20px!important;width:58px!important;height:58px!important;min-width:58px!important}}
+  @media(max-width:430px){#fntPermanentMusicOrb{right:96px!important;bottom:24px!important;width:48px!important;height:48px!important;min-width:48px!important}}
 </style>
 <script id="fnt-permanent-music-and-label-controller">
 (function(){
@@ -1921,7 +1921,12 @@ try{
       inside.classList.remove('fnt-real-label-card');
       var label=inside.querySelector('span');
       if(label&&label.textContent!=='INSIDE'+nbsp+'LABEL')label.textContent='INSIDE'+nbsp+'LABEL';
-      var image=inside.querySelector('img');if(image)image.alt='Purple F’N Team inside label';
+      var image=inside.querySelector('img');
+      if(image){
+        if(!inside.dataset.fntCorrectInsideSrc)inside.dataset.fntCorrectInsideSrc=image.getAttribute('src');
+        if(image.getAttribute('src')!==inside.dataset.fntCorrectInsideSrc)image.setAttribute('src',inside.dataset.fntCorrectInsideSrc);
+        image.alt='Purple F’N Team inside label on garment';
+      }
     }
     if(outside){
       var outsideLabel=outside.querySelector('span');

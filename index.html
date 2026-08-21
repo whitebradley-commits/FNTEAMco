@@ -1624,27 +1624,23 @@ try{
     const packageAtDoor = cardByLabel('PACKAGE AT YOUR DOOR');
     const largerPackage = cardByLabel('LARGER PACKAGE');
     const openedPackage = cardByLabel('OPENED PACKAGE');
-    const garmentsCard = cardByLabel('GARMENTS & CARD');
-    const outsideLabel = cardByLabel('OUTSIDE LABEL');
-    const insideLabel = proofCard.cloneNode(true);
+    const outsideLabel = cardByLabel('OUTSIDE LABEL') || originalCards[originalCards.length - 1].cloneNode(true);
+    outsideLabel.classList.add('fn-outside-label-card');
+    outsideLabel.setAttribute('aria-label', 'Purple F’N TEAM outside garment label');
+    const outsideLabelCaption = outsideLabel.querySelector('span, small, p, strong');
+    if (outsideLabelCaption) outsideLabelCaption.textContent = 'OUTSIDE LABEL';
+    const insideLabel = cardByLabel('INSIDE LABEL') || outsideLabel.cloneNode(true);
     insideLabel.classList.remove('fn-folded-stacks-card');
     insideLabel.classList.add('fn-inside-label-card');
-    insideLabel.setAttribute('aria-label', 'Close-up of the cream and black F’N TEAM inside neck label');
+    insideLabel.setAttribute('aria-label', 'Purple F’N TEAM inside neck label');
     const insideLabelImage = insideLabel.querySelector('img');
     const insideLabelCaption = insideLabel.querySelector('span, small, p, strong');
-    if (insideLabelImage) {
-      insideLabelImage.src = proofSource;
-      insideLabelImage.alt = 'Cream and black F’N TEAM inside neck label on a folded shirt';
-      insideLabelImage.style.objectFit = 'cover';
-      insideLabelImage.style.objectPosition = '42% 34%';
-      insideLabelImage.style.transform = 'scale(2.35)';
-      insideLabelImage.style.transformOrigin = '42% 34%';
-    }
-    if (insideLabelCaption) insideLabelCaption.textContent = 'INSIDE NECK LABEL';
+    if (insideLabelImage) insideLabelImage.alt = 'Purple F’N TEAM inside neck label';
+    if (insideLabelCaption) insideLabelCaption.textContent = 'INSIDE LABEL';
     // Six distinct home-page photos: folded shirts with neck tags, small flat
     // purple box, larger box, opened box, garments/card, and inside-label view.
     // The separate outside-tag photo is intentionally excluded.
-    row.replaceChildren(...[proofCard, packageAtDoor, largerPackage, openedPackage, garmentsCard, insideLabel].filter(Boolean));
+    row.replaceChildren(...[proofCard, packageAtDoor, largerPackage, openedPackage, insideLabel, outsideLabel].filter(Boolean));
     gallery.classList.add('fn-packaging-grid');
     row.dataset.fnPackagingOrder = 'folded-first-two-by-three-v1';
   };
@@ -1991,7 +1987,7 @@ html{scroll-behavior:smooth}body.fnt-lock-scroll{overflow:hidden}
   function closeMusic(){musicModal.classList.remove('open');musicModal.setAttribute('aria-hidden','true');document.body.classList.remove('fnt-lock-scroll');updateBack()}
   musicOrb.addEventListener('click',openMusic);document.getElementById('fntCoreMusicClose').addEventListener('click',closeMusic);musicModal.addEventListener('click',function(e){if(e.target===musicModal)closeMusic()});
   musicModal.querySelectorAll('[data-track]').forEach(function(btn){btn.addEventListener('click',function(){var t=this.dataset.track;if(t==='off')stopMusic();else startMusic(t);closeMusic()})});
-  function firstGesture(e){if(hasStarted||e.target.closest('#fntCoreMusicModal,#fntCoreMusicOrb'))return;hasStarted=true;startMusic('three');document.removeEventListener('pointerdown',firstGesture,true);document.removeEventListener('touchstart',firstGesture,true)}
+  function firstGesture(e){return}
   document.addEventListener('pointerdown',firstGesture,true);document.addEventListener('touchstart',firstGesture,true);
   window.addEventListener('pagehide',function(){if(timer)clearTimeout(timer)});updateBack();
 })();

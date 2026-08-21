@@ -2448,4 +2448,60 @@ const installIfNotShownLink = host => {
  setTimeout(install,300);setTimeout(install,1200);
 })();
 </script>
+<style id="fnt-approved-order-music-repair-v1">
+  /* Approved layout only: one-off + F'N Team products first, premium cards below. */
+  .fnt-team-switch { display:none !important; }
+  #fnMusicOrb {
+    left:auto !important;
+    right:80px !important;
+    bottom:22px !important;
+  }
+  #fntConfusedOrb.fnt-confused-orb {
+    right:16px !important;
+    bottom:22px !important;
+  }
+  @media(max-width:430px){
+    #fnMusicOrb{left:auto !important;right:78px !important;bottom:22px !important}
+    #fntConfusedOrb.fnt-confused-orb{right:14px !important;bottom:22px !important}
+  }
+</style>
+<script id="fnt-approved-order-music-repair-v1">
+(()=>{
+  const shop=document.getElementById('shop');
+  const reserve=document.getElementById('reserve');
+  const products=document.getElementById('products');
+  const teamHeading=document.getElementById('shopTeam');
+
+  function approvedOrder(){
+    if(products&&reserve&&products.nextElementSibling!==reserve) reserve.before(products);
+  }
+
+  let scrollQueued=false;
+  function landAtTeamTop(){
+    if(!shop||shop.style.display==='none'||scrollQueued)return;
+    scrollQueued=true;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{
+      approvedOrder();
+      shop.scrollIntoView({behavior:'auto',block:'start'});
+      scrollQueued=false;
+    }));
+  }
+
+  approvedOrder();
+  if(teamHeading)new MutationObserver(landAtTeamTop).observe(teamHeading,{childList:true,characterData:true,subtree:true});
+
+  let musicStarted=false;
+  function startMusicAfterTouch(){
+    if(musicStarted)return;
+    const controls=window.FN_TEAM_MUSIC;
+    if(!controls?.setTrack)return;
+    musicStarted=true;
+    controls.setTrack('rep',{shouldPlay:true,remember:true});
+  }
+  document.addEventListener('pointerdown',startMusicAfterTouch,{once:true,capture:true});
+  document.addEventListener('touchstart',startMusicAfterTouch,{once:true,capture:true,passive:true});
+
+  window.addEventListener('load',()=>{approvedOrder();setTimeout(approvedOrder,250)},{once:true});
+})();
+</script>
 </body></html>

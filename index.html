@@ -1,3 +1,4 @@
+<style id="fnt-first-paint-gate-cleanup">#offer .offer-close{display:none!important;pointer-events:none!important}#fntPermanentMusicOrb,#fntPermanentMusicPanel{display:none!important}</style>
 <!doctype html>
 <html lang="en" data-exact-share-law="159" data-exact-share-v165="1"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><title>Who’s Yours? | FNT Co.</title><style id="fnt-entry-ticket-final-v1">
 #offer.overlay{background:rgba(5,8,14,.76)!important;backdrop-filter:blur(9px)!important;-webkit-backdrop-filter:blur(9px)!important;z-index:2147483500!important;padding:18px!important}
@@ -1906,7 +1907,8 @@ try{
   #fntPermanentMusicPanel strong{display:block;margin:0 0 9px;text-align:center;font-size:12px;letter-spacing:.16em}
   #fntPermanentMusicPanel button{display:block;width:100%;margin:7px 0;padding:11px 8px;border:2px solid #ff5b7d;background:#111;color:#fff;font-weight:800;letter-spacing:.09em}
   #fntPermanentMusicPanel button.active{background:#ff5b7d;color:#111}
-  .fnt-real-label-card:after{display:none!important;content:none!important}
+.fnt-real-label-card:after{display:none!important;content:none!important}
+  .fnt-header-credit{color:#d7193f!important;text-decoration:line-through;text-decoration-thickness:2px;font-weight:900!important;white-space:nowrap}
   @keyframes fntPermanentPulse{50%{box-shadow:0 0 0 3px #ff9cb2,0 0 32px rgba(255,75,115,1)}}
   @media(max-width:430px){#fntPermanentMusicOrb{right:96px!important;bottom:24px!important;width:48px!important;height:48px!important;min-width:48px!important}}
 </style>
@@ -2642,15 +2644,29 @@ html,body{min-width:0!important;zoom:1!important}
 </style>
 <script id="fnt-entry-claim-last-word">
 (function(){
+  function paintCredit(){
+    if(!document.body||!document.body.classList.contains('fnt-credit-claimed'))return;
+    var cartButton=document.getElementById('cart');if(!cartButton)return;
+    var count=0;try{count=JSON.parse(localStorage.getItem('fnt-cart-v2')||'[]').length||0;}catch(e){}
+    var wanted='CART ('+count+') · <strong class="fnt-header-credit">−$33.50</strong> FREE PRIORITY SHIPPING';
+    if(cartButton.innerHTML!==wanted)cartButton.innerHTML=wanted;
+    cartButton.hidden=false;
+  }
   function enter(){
     if(window.FN_REAL_MUSIC)window.FN_REAL_MUSIC.playOutbyte();
-    window.free=true;
+    try{free=true;}catch(e){window.free=true;}
     try{localStorage.setItem('fnt-free-shipping-v1','claimed');}catch(e){}
     var offer=document.getElementById('offer');if(offer)offer.style.display='none';
     if(typeof window.sync==='function')window.sync();
+    var firstPaint=document.getElementById('fnt-first-paint-gate-cleanup');if(firstPaint)firstPaint.remove();
+    if(document.body)document.body.classList.add('fnt-credit-claimed');
+    paintCredit();
+    var saving=document.getElementById('saving');if(saving)saving.hidden=false;
+    document.dispatchEvent(new CustomEvent('fnt:gate-entered'));
   }
   window.claim=enter;
   document.addEventListener('DOMContentLoaded',function(){window.claim=enter;});
+  setInterval(paintCredit,900);
 })();
 </script>
 <script id="fnt-remove-entry-x-final">

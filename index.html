@@ -1920,6 +1920,53 @@ try{
     #fntDefaultMusicOrb{right:91px!important;bottom:22px!important;width:54px!important;height:54px!important;min-width:54px!important}
   }
 </style>
+<!-- Final entry + music repair. This intentionally changes no store content or layout. -->
+<style id="fnt-entry-music-final-style">
+  #offer .offer-close,#offer [aria-label*="Close" i],#offer [aria-label*="Exit" i]{display:none!important}
+  #fntCompactMusicOrb,#fntDefaultMusicOrb,#fntNativeMusicDock{display:none!important}
+  #fnMusicOrb{display:grid!important;position:fixed!important;left:18px!important;right:auto!important;bottom:18px!important;top:auto!important;transform:none!important;z-index:2147483600!important}
+</style>
+<script id="fnt-entry-music-final-controller">
+(function(){
+  var TRACKS={
+    night:{name:'SHADOWS',src:'https://3000-itnriqdae85h3eg3805os-352df2ac.us2.manus.computer/manus-storage/fnt_music_night_city_9ff992d5.mp3'},
+    pulse:{name:'DARK MOON',src:'https://3000-itnriqdae85h3eg3805os-352df2ac.us2.manus.computer/manus-storage/fnt_music_clean_pulse_4520fe47.mp3'},
+    rep:{name:'OUTBYTE',src:'https://3000-itnriqdae85h3eg3805os-352df2ac.us2.manus.computer/manus-storage/fnt_music_rep_hard_751037db.mp3'}
+  };
+  var audio,orb,panel,current='rep',ready=false;
+  function mount(){
+    audio=document.getElementById('fnMusicAudio')||document.createElement('audio');
+    audio.id='fnMusicAudio';audio.loop=true;audio.preload='auto';audio.playsInline=true;audio.volume=.36;
+    if(!audio.parentNode)document.body.appendChild(audio);
+    orb=document.getElementById('fnMusicOrb');panel=document.getElementById('fnMusicPanel');
+    if(!orb)return;
+    orb.textContent='MUSIC';orb.setAttribute('aria-label','Music on or off');orb.setAttribute('aria-pressed','false');
+    if(panel){panel.innerHTML='<button type="button" class="fn-music-close" aria-label="Close music controls">×</button><span>CHOOSE A SONG</span><div class="fn-music-options"><button type="button" data-real-track="night">SHADOWS</button><button type="button" data-real-track="pulse">DARK MOON</button><button type="button" data-real-track="rep">OUTBYTE</button><button type="button" data-real-track="off">OFF</button></div>';panel.hidden=true;}
+    ready=true;paint();
+  }
+  function paint(){if(!orb)return;var on=!audio.paused&&!!audio.src;orb.classList.toggle('is-playing',on);orb.setAttribute('aria-pressed',String(on));if(panel)panel.querySelectorAll('[data-real-track]').forEach(function(b){b.classList.toggle('active',b.dataset.realTrack===current);});}
+  function play(track){
+    if(!ready)mount();track=track||'rep';var item=TRACKS[track];if(!item)return Promise.reject();
+    current=track;try{if(window.FNT_MUSIC)window.FNT_MUSIC.stop();}catch(e){}
+    if(audio.getAttribute('src')!==item.src){audio.src=item.src;audio.load();}
+    var attempt=audio.play();Promise.resolve(attempt).then(paint).catch(function(){paint();});return attempt;
+  }
+  function stop(){audio.pause();paint();}
+  function enter(){play('rep');var offer=document.getElementById('offer');window.free=true;try{localStorage.setItem('fnt-free-shipping-v1','claimed');}catch(e){}if(offer)offer.style.display='none';if(typeof window.sync==='function')window.sync();}
+  window.claim=enter;
+  window.addEventListener('pointerdown',function(e){var hit=e.target&&e.target.closest&&e.target.closest('#offer .claim-btn');if(!hit)return;e.stopImmediatePropagation();e.stopPropagation();play('rep');},true);
+  window.addEventListener('click',function(e){
+    var music=e.target&&e.target.closest&&e.target.closest('#fnMusicOrb');
+    if(music){e.preventDefault();e.stopImmediatePropagation();e.stopPropagation();if(!audio.paused)stop();else if(panel){panel.hidden=false;panel.classList.add('open');}else play(current);return;}
+    var choice=e.target&&e.target.closest&&e.target.closest('[data-real-track]');
+    if(choice){e.preventDefault();e.stopImmediatePropagation();var track=choice.dataset.realTrack;if(track==='off')stop();else play(track);if(panel){panel.classList.remove('open');panel.hidden=true;}return;}
+    if(e.target&&e.target.closest&&e.target.closest('#fnMusicPanel .fn-music-close')){e.preventDefault();if(panel){panel.classList.remove('open');panel.hidden=true;}}
+  },true);
+  document.addEventListener('play',function(e){if(e.target!==audio&&e.target instanceof HTMLAudioElement)e.target.pause();},true);
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
+  window.FN_REAL_MUSIC={playOutbyte:function(){return play('rep');},stop:stop};
+})();
+</script>
 <script id="fnt-final-entry-refresh-fix">
 (function(){
   function showFreshOffer(){
@@ -2507,3 +2554,21 @@ html,body{min-width:0!important;zoom:1!important}
     #offer .offer h2.fn-offer-square>span:nth-child(2),#offer .offer h2.fn-offer-square>span:nth-child(3){font-size:41px!important}
   }
 </style>
+<style id="fnt-entry-music-last-word">
+#offer .offer-close,#offer [aria-label*="Close" i],#offer [aria-label*="Exit" i]{display:none!important;pointer-events:none!important}
+#fntCompactMusicOrb,#fntDefaultMusicOrb,#fntNativeMusicDock{display:none!important}
+#fnMusicOrb{display:grid!important;position:fixed!important;left:18px!important;right:auto!important;bottom:18px!important;top:auto!important;transform:none!important;z-index:2147483600!important}
+</style>
+<script id="fnt-entry-claim-last-word">
+(function(){
+  function enter(){
+    if(window.FN_REAL_MUSIC)window.FN_REAL_MUSIC.playOutbyte();
+    window.free=true;
+    try{localStorage.setItem('fnt-free-shipping-v1','claimed');}catch(e){}
+    var offer=document.getElementById('offer');if(offer)offer.style.display='none';
+    if(typeof window.sync==='function')window.sync();
+  }
+  window.claim=enter;
+  document.addEventListener('DOMContentLoaded',function(){window.claim=enter;});
+})();
+</script>

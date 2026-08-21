@@ -1626,9 +1626,10 @@ try{
     const openedPackage = cardByLabel('OPENED PACKAGE');
     const garmentsCard = cardByLabel('GARMENTS & CARD');
     const outsideLabel = cardByLabel('OUTSIDE LABEL');
-    // Six home-page tiles only: folded shirts, small flat box, larger box,
-    // opened box, garments/card, and the optional outside label.
-    row.replaceChildren(...[proofCard, packageAtDoor, largerPackage, openedPackage, garmentsCard, outsideLabel].filter(Boolean));
+    // Home-page packaging story only: folded shirts with neck tags, the small
+    // flat purple box, the larger box, the opened box, and garments/card.
+    // The standalone tag/label tile does not belong in this section.
+    row.replaceChildren(...[proofCard, packageAtDoor, largerPackage, openedPackage, garmentsCard].filter(Boolean));
     gallery.classList.add('fn-packaging-grid');
     row.dataset.fnPackagingOrder = 'folded-first-two-by-three-v1';
   };
@@ -2009,7 +2010,9 @@ html,body{min-width:0!important;zoom:1!important}
 #fnIdeasProofLightbox .fn-popup-ideas-preview .fn-ideas-close{position:fixed!important;top:max(14px,env(safe-area-inset-top))!important;right:14px!important;width:46px!important;height:46px!important;display:grid!important;place-items:center!important;border:3px solid #ff5f7c!important;border-radius:50%!important;background:#080808!important;color:#fff!important;box-shadow:0 0 18px rgba(255,95,124,.82)!important;font:900 29px/1 Arial,sans-serif!important}
 /* One music orb only. The compact duplicate is removed from view. */
 #fntCompactMusicOrb{display:none!important}
-/* The packaging story always stays six equal tiles: three over three. */
+/* Sport and team dropdowns are the only chooser; remove the typed-team field and GO control. */
+#picker>.orrow,#picker>.typefield{display:none!important}
+/* Keep the packaging story in equal three-column tiles. */
 .fnt-experience-gallery.fn-packaging-grid .fnt-experience-row{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;width:100%!important;min-width:0!important;gap:8px!important}
 .fnt-experience-gallery.fn-packaging-grid .fnt-experience-card{width:100%!important;min-width:0!important}
 </style>

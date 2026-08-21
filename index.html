@@ -1620,15 +1620,15 @@ try{
       overlay.hidden = false;
       overlay.querySelector('.fn-ideas-close').onclick = () => { overlay.hidden = true; };
     });
-    const cardByLabel = label => originalCards.find(card => (card.textContent || '').replace(/s+/g,' ').trim().toUpperCase().startsWith(label));
+    const cardByLabel = label => originalCards.find(card => (card.textContent || '').replace(/\s+/g,' ').trim().toUpperCase().startsWith(label));
     const packageAtDoor = cardByLabel('PACKAGE AT YOUR DOOR');
     const largerPackage = cardByLabel('LARGER PACKAGE');
     const openedPackage = cardByLabel('OPENED PACKAGE');
     const garmentsCard = cardByLabel('GARMENTS & CARD');
     const outsideLabel = cardByLabel('OUTSIDE LABEL');
-    const insideLabel = cardByLabel('INSIDE LABEL');
-    // Keep the original packaging, unboxing, garment, and label story on the main page.
-    row.replaceChildren(proofCard, packageAtDoor, largerPackage, openedPackage, garmentsCard, insideLabel, outsideLabel);
+    // Six home-page tiles only: folded shirts, small flat box, larger box,
+    // opened box, garments/card, and the optional outside label.
+    row.replaceChildren(...[proofCard, packageAtDoor, largerPackage, openedPackage, garmentsCard, outsideLabel].filter(Boolean));
     gallery.classList.add('fn-packaging-grid');
     row.dataset.fnPackagingOrder = 'folded-first-two-by-three-v1';
   };
@@ -1846,15 +1846,15 @@ try{
     '.fn-premium-or { margin: 18px 0 0; text-align: center; font: 900 11px/1 Arial,sans-serif; letter-spacing: .2em; }',
     '.fn-premium-go { width: 100%; margin-top: 20px; border: 2px solid #111; background: #111; color: #f3eadb; padding: 15px; font: 900 12px/1 Arial,sans-serif; letter-spacing: .13em; }',
     '/* F’N TEAM: one compact offer block, deliberately aligned like the boxed company-logo geometry. */',
-    '.offer h2.fn-offer-square { width:min(226px,100%) !important; box-sizing:border-box !important; display:grid !important; grid-template-columns:1fr !important; justify-items:center !important; gap:1px !important; padding:15px 14px 12px !important; text-align:center !important; }',
-    '.offer h2.fn-offer-square > span { display:block !important; width:100% !important; margin:0 !important; font-size:39px !important; line-height:.9 !important; letter-spacing:-.055em !important; text-align:center !important; transform-origin:center center !important; }',
-    '.offer h2.fn-offer-square > span:first-child { font-size:40px !important; margin-top:-3px !important; margin-bottom:2px !important; transform:scaleX(1.24) !important; }',
+    '.offer h2.fn-offer-square { width:min(226px,100%) !important; max-width:226px !important; box-sizing:border-box !important; display:grid !important; grid-template-columns:1fr !important; justify-items:center !important; gap:1px !important; margin:0 auto 20px !important; padding:15px 14px 12px !important; overflow:visible !important; border:0 !important; border-radius:0 !important; background:transparent !important; box-shadow:none !important; text-align:center !important; }',
+    '.offer h2.fn-offer-square > span { display:block !important; width:100% !important; margin:0 !important; color:#ff5274 !important; font-size:39px !important; line-height:.9 !important; letter-spacing:-.055em !important; white-space:nowrap !important; text-align:center !important; transform:none !important; transform-origin:center center !important; }',
+    '.offer h2.fn-offer-square > span:first-child { color:#fff !important; font-size:40px !important; margin:-3px 0 2px !important; transform:scaleX(1.39) !important; }',
     '/* F’N TEAM music: external bottom-left control, separate from the opening offer. */',
     '#fnMusicPanel > span { display:block; margin-bottom:6px; font:900 8px/1 Arial,sans-serif; letter-spacing:.12em; text-align:center; }',
     '.fn-music-options { display:grid; grid-template-columns:1fr 1fr; gap:4px; } .fn-music-options button { min-height:25px; border:1px solid #101010; background:#f4eadb; color:#101010; padding:5px 4px; font:900 7px/1 Arial,sans-serif; letter-spacing:.065em; cursor:pointer; } .fn-music-options button.active { border-color:#101010; background:#101010; color:#f4eadb; box-shadow:inset 0 0 0 2px #6b44c9; } .fn-music-options button:active { transform:scale(.96); }',
     '#fnMusicOrb { position:fixed; left:18px; bottom:26px; z-index:88; width:48px; height:48px; padding:5px; border:3px solid #6b44c9; border-radius:50%; background:#080808; color:#fff; font:1000 7px/1 Arial,sans-serif; letter-spacing:.04em; text-align:center; box-shadow:0 0 0 3px #080808,0 0 13px rgba(124,58,237,.72); animation:fntConfusedPulse 1.25s ease-in-out infinite -.38s; } #fnMusicOrb.is-playing { background:#6b44c9; border-color:#c4a7ff; box-shadow:0 0 0 3px #080808,0 0 16px rgba(124,58,237,.95); }',
     '#fnMusicPanel { position:fixed; left:16px; bottom:82px; z-index:89; width:176px; padding:19px 8px 8px; border:2px solid #101010; background:#f4eadb; color:#101010; box-shadow:5px 5px 0 #101010,0 0 0 3px #6b44c9; opacity:0; transform:translateY(8px) scale(.98); transition:opacity .16s cubic-bezier(.23,1,.32,1),transform .16s cubic-bezier(.23,1,.32,1); } #fnMusicPanel[hidden] { display:none !important; pointer-events:none !important; } #fnMusicPanel.open { opacity:1; transform:translateY(0) scale(1); } #fnMusicPanel .fn-music-close { position:absolute; top:3px; right:5px; border:0; background:transparent; color:#101010; padding:0; font:900 18px/1 Arial,sans-serif; cursor:pointer; }',
-    '@media(max-width:700px){ .offer h2.fn-offer-square{width:min(218px,100%) !important;padding:14px 12px 11px !important}.offer h2.fn-offer-square > span{font-size:37px !important;line-height:.9 !important}.offer h2.fn-offer-square > span:first-child{font-size:38px !important;margin-top:-3px !important;margin-bottom:2px !important} }',
+    '@media(max-width:700px){ .offer h2.fn-offer-square{width:min(218px,100%) !important;max-width:218px !important;padding:14px 12px 11px !important}.offer h2.fn-offer-square > span{font-size:37px !important;line-height:.9 !important}.offer h2.fn-offer-square > span:first-child{font-size:38px !important;margin:-3px 0 2px !important;transform:scaleX(1.39) !important} }',
     '@media(max-width:430px){ #fnMusicOrb{left:15px;bottom:22px;width:45px;height:45px;font-size:7px} #fnMusicPanel{left:13px;bottom:74px;width:172px} }',
     '@media (max-width: 640px) { .photo.fn-team-finished-photo { background-position: center 42% !important; } }'
   ].join('\n');
@@ -2001,6 +2001,18 @@ html{scroll-behavior:smooth}body.fnt-lock-scroll{overflow:hidden}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install);else install();
 })();
 </script>
+<style id="fnt-mobile-scale-and-single-music-fix">
+/* Keep the page at its normal mobile scale and never let a proof image become the page. */
+html,body{min-width:0!important;zoom:1!important}
+#fnIdeasProofLightbox .fn-popup-ideas-preview{width:min(620px,calc(100vw - 26px))!important;max-width:calc(100vw - 26px)!important;max-height:calc(100dvh - 34px)!important;box-sizing:border-box!important;overflow:auto!important}
+#fnIdeasProofLightbox .fn-popup-idea-large{display:block!important;width:auto!important;height:auto!important;max-width:calc(100vw - 58px)!important;max-height:calc(100dvh - 145px)!important;object-fit:contain!important}
+#fnIdeasProofLightbox .fn-popup-ideas-preview .fn-ideas-close{position:fixed!important;top:max(14px,env(safe-area-inset-top))!important;right:14px!important;width:46px!important;height:46px!important;display:grid!important;place-items:center!important;border:3px solid #ff5f7c!important;border-radius:50%!important;background:#080808!important;color:#fff!important;box-shadow:0 0 18px rgba(255,95,124,.82)!important;font:900 29px/1 Arial,sans-serif!important}
+/* One music orb only. The compact duplicate is removed from view. */
+#fntCompactMusicOrb{display:none!important}
+/* The packaging story always stays six equal tiles: three over three. */
+.fnt-experience-gallery.fn-packaging-grid .fnt-experience-row{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;width:100%!important;min-width:0!important;gap:8px!important}
+.fnt-experience-gallery.fn-packaging-grid .fnt-experience-card{width:100%!important;min-width:0!important}
+</style>
 </body></html>
 <!-- FN Team GO button and self-contained music repair. -->
 <style id="fnt-go-cream-button-style">

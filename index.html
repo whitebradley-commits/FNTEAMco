@@ -1885,6 +1885,82 @@ try{
 })();
 </script>
 
+<style id="fnt-permanent-music-and-label-fix">
+  #fnMusicOrb,#fntCompactMusicOrb,#fntDefaultMusicOrb,#fntNativeMusicDock,#fntCoreMusicOrb{display:none!important}
+  #fntPermanentMusicOrb{
+    position:fixed!important;right:126px!important;bottom:20px!important;left:auto!important;top:auto!important;
+    width:62px!important;height:62px!important;min-width:62px!important;border-radius:50%!important;
+    display:grid!important;place-items:center!important;z-index:2147483645!important;
+    border:4px solid #ff5b7d!important;outline:3px solid #111!important;
+    background:#111!important;color:#fff!important;font:800 9px/1 Arial,sans-serif!important;
+    letter-spacing:.08em!important;text-align:center!important;box-shadow:0 0 0 2px #ff9cb2,0 0 24px rgba(255,75,115,.8)!important;
+    padding:0!important;margin:0!important;transform:none!important;opacity:1!important;visibility:visible!important;
+  }
+  #fntPermanentMusicOrb.is-playing{background:#111!important;animation:fntPermanentPulse 1.35s ease-in-out infinite!important}
+  #fntPermanentMusicPanel{
+    position:fixed!important;right:18px!important;bottom:96px!important;width:210px!important;z-index:2147483646!important;
+    display:none;padding:14px;background:rgba(10,10,12,.96);border:3px solid #ff5b7d;border-radius:18px;
+    box-shadow:0 0 0 2px #111,0 0 25px rgba(255,75,115,.7);color:#fff;font-family:Arial,sans-serif;
+  }
+  #fntPermanentMusicPanel.open{display:block!important}
+  #fntPermanentMusicPanel strong{display:block;margin:0 0 9px;text-align:center;font-size:12px;letter-spacing:.16em}
+  #fntPermanentMusicPanel button{display:block;width:100%;margin:7px 0;padding:11px 8px;border:2px solid #ff5b7d;background:#111;color:#fff;font-weight:800;letter-spacing:.09em}
+  #fntPermanentMusicPanel button.active{background:#ff5b7d;color:#111}
+  .fnt-real-label-card:after{display:none!important;content:none!important}
+  @keyframes fntPermanentPulse{50%{box-shadow:0 0 0 3px #ff9cb2,0 0 32px rgba(255,75,115,1)}}
+  @media(max-width:430px){#fntPermanentMusicOrb{right:112px!important;bottom:20px!important;width:58px!important;height:58px!important;min-width:58px!important}}
+</style>
+<script id="fnt-permanent-music-and-label-controller">
+(function(){
+  var nbsp='\u00a0', panel;
+  function protectLabels(){
+    var cards=Array.from(document.querySelectorAll('.fnt-experience-card'));
+    var inside=cards.find(function(card){return /INSIDE[\s\u00a0]+LABEL/i.test(card.textContent||'');});
+    var outside=cards.find(function(card){return /OUTSIDE[\s\u00a0]+LABEL/i.test(card.textContent||'');});
+    if(inside){
+      inside.classList.remove('fnt-real-label-card');
+      var label=inside.querySelector('span');
+      if(label&&label.textContent!=='INSIDE'+nbsp+'LABEL')label.textContent='INSIDE'+nbsp+'LABEL';
+      var image=inside.querySelector('img');if(image)image.alt='Purple F’N Team inside label';
+    }
+    if(outside){
+      var outsideLabel=outside.querySelector('span');
+      if(outsideLabel&&outsideLabel.textContent!=='OUTSIDE LABEL')outsideLabel.textContent='OUTSIDE LABEL';
+      var outsideImage=outside.querySelector('img');if(outsideImage)outsideImage.alt='Purple F’N Team outside label';
+    }
+  }
+  function api(){return window.FN_REAL_MUSIC;}
+  function syncOrb(){
+    var orb=document.getElementById('fntPermanentMusicOrb');if(!orb)return;
+    var playing=!!(api()&&api().isPlaying&&api().isPlaying());
+    orb.classList.toggle('is-playing',playing);orb.innerHTML=playing?'MUSIC<br>ON':'MUSIC';
+  }
+  function choose(track,button){
+    if(!api())return;
+    if(track==='off')api().stop();else if(api().play)api().play(track);else api().playOutbyte();
+    panel.querySelectorAll('button').forEach(function(b){b.classList.toggle('active',b===button&&track!=='off');});
+    setTimeout(syncOrb,100);panel.classList.remove('open');
+  }
+  function ensureMusic(){
+    var orb=document.getElementById('fntPermanentMusicOrb');
+    if(!orb){
+      orb=document.createElement('button');orb.id='fntPermanentMusicOrb';orb.type='button';orb.setAttribute('aria-label','Open music choices or turn music off');document.body.appendChild(orb);
+      orb.addEventListener('click',function(event){event.preventDefault();event.stopPropagation();panel.classList.toggle('open');});
+    }
+    panel=document.getElementById('fntPermanentMusicPanel');
+    if(!panel){
+      panel=document.createElement('div');panel.id='fntPermanentMusicPanel';panel.innerHTML='<strong>MUSIC</strong><button data-track="rep">OUTBYTE</button><button data-track="noir">SHADOWS</button><button data-track="velvet">DARK MOON</button><button data-track="off">OFF</button>';document.body.appendChild(panel);
+      panel.querySelectorAll('button').forEach(function(button){button.addEventListener('click',function(){choose(button.dataset.track,button);});});
+    }
+    syncOrb();
+  }
+  protectLabels();ensureMusic();
+  document.addEventListener('DOMContentLoaded',function(){protectLabels();ensureMusic();});
+  document.addEventListener('visibilitychange',function(){if(document.hidden&&api())api().stop();setTimeout(syncOrb,50);});
+  setInterval(function(){protectLabels();ensureMusic();},1200);
+})();
+</script>
+
 <!-- Final stability rules: one music orb, a six-photo packaging grid, and a fresh entry offer on every load. -->
 <style id="fnt-final-entry-and-controls-fix">
   #fnMusicOrb,
@@ -1964,7 +2040,7 @@ rep:{name:'OUTBYTE',src:"data:audio/mpeg;base64,SUQzBAAAAAACAVRQRTEAAAAOAAADQmVh
   },true);
   document.addEventListener('play',function(e){if(e.target!==audio&&e.target instanceof HTMLAudioElement)e.target.pause();},true);
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',mount);else mount();
-  window.FN_REAL_MUSIC={playOutbyte:function(){return play('rep');},stop:stop};
+window.FN_REAL_MUSIC={playOutbyte:function(){return play('rep');},play:play,stop:stop,isPlaying:function(){return !!(audio&&!audio.paused);}};
 })();
 </script>
 <script id="fnt-final-entry-refresh-fix">
